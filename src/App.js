@@ -149,6 +149,9 @@ class App extends Component {
   }
 
   deleteTodo(todoId) {
+    this.setState({
+      currentTodo: ""
+    })
     axios({
       url: `/todos/${todoId}.json`,
       baseURL: `https://todo-704f6.firebaseio.com/`,
@@ -159,6 +162,7 @@ class App extends Component {
       this.setState({
         todos,
       });
+      this.renderCurrentTodo();
     }).catch((error) => {
       console.log(error);
     });
