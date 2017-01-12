@@ -8,6 +8,8 @@ class App extends Component {
     this.state = { todos: {} };
 
     this.handleNewTodoInput = this.handleNewTodoInput.bind(this);
+    this.deleteTodo = this.deleteTodo.bind(this);
+    this.createTodo = this.createTodo.bind(this);
   }
 
   componentDidMount() {
@@ -70,15 +72,37 @@ class App extends Component {
             <h4>{todo.title}</h4>
             <div>{moment(todo.createdAt).calendar()}</div>
           </div>
+          <button
+            className="ml-4 btn btn-link"
+            onClick={ () => { this.deleteTodo(todoId) } }
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
       );
-    };
+    }
 
     return(
       <div className="todo-list">
         {todoElements}
       </div>
     );
+  }
+
+  deleteTodo(todoId) {
+    axios({
+      url: `/todos/${todoId}.json`,
+      baseURL: `https://todo-704f6.firebaseio.com/`,
+      method: "DELETE",
+    }).then((response) => {
+      let todos = this.state.todos;
+      delete todos[todoId];
+      this.setState({
+        todos,
+      });
+    }).catch((error) => {
+      console.log(error);
+    });
   }
 
   render() {
